@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width">
+		<title>Event Signups</title>
+		<link rel="stylesheet" href="https://get.mavo.io/stable/mavo.css">
+		<script src="https://get.mavo.io/stable/mavo.js"></script>
+		<style>
+			.me-true: {
+					font-weight: bold;
+			}
+			.debug {
+					display: none;
+			}
+			.debug-true.debug, .debug-true .debug {
+					display: inherit;
+			}
+		</style>
+		<script type="module" src="firebase-helper.js"></script>
+	</head>
+	<body>
+
+		<section mv-app="util"
+						 class="debug-[url('debug')=='']"
+						 mv-bar="none"
+						 >
+<!--						 mv-source="firebase://mavo-cd7c3/mavo-apps/signup"
+						 mv-plugins="firebase-firestore"
+						 mv-storage-options="auth"
+						 mv-autosave="1"
+						 mv-storage-key="AIzaSyC0PxY82lVLTLv80ZU1z5sz1azoYZits0I"-->
+			<table class="debug" mv-storage="none">
+				<tr><td>eventId<td property="eventId" mv-default="[url('eventId')]"></tr>
+				<tr><td>storePrefix<td property="storePrefix">https://mavo-cd7c3.firebaseio.com/mavo-apps/signup/</tr>
+				<tr><td>eventStore<td property="eventStore">[storePrefix & 'events/' & eventId]</tr>
+				<tr><td>signupStore<td property="signupStore">[storePrefix & 'signups/' & eventId]</tr>
+				<tr><td>uid<td id="uid" property="uid">567</tr>
+				<tr><td>name<td id="name" property="name">David</tr>
+			</table>
+			<form mv-if="uid" method="get"> 
+				<input name="eventId" value="[''+$startup]" type="hidden">
+				<input type="submit" value="Create an event">
+			</form>
+			<div mv-if="!uid">Please log in to use the signup tool</div>
+		</section>
+
+
+		<main>
+			<section mv-if="util.uid && util.eventId"
+							 class="debug-[url('debug')=='']"
+							 mv-app="event"
+							 mv-bar="status login logout"
+							 mv-plugins="firebase-firestore"
+							 mv-autosave="1"
+							 mv-autosave="3"
+							 mv-mode="[if(isOwner,'edit','read')]"
+							 mv-storage="[util.eventStore || 'none']"
+							 mv-storage-options="auth all-can-edit"
+							 mv-storage-key="AIzaSyC0PxY82lVLTLv80ZU1z5sz1azoYZits0I"
+							 >
+				<div class="debug">
+					<table>
+						<tr><td>ownerId<td property="ownerId" mv-default="[util.uid]"></tr>
+						<tr><td>isOwner<td property="isOwner" mv-storage="none" mv-value="util.uid && util.uid==ownerId"></tr>
+					</table>
+				</div>
+				<h2 mv-if="isOwner">Edit your event</h2>
+				<h2><span property="eventName"></span></h2>
+				<div><time property="eventTime" mv-default="[$startup]"></time> by
+					<span property="organizerName" mv-default="[util.name]"></span></div>
+				<div><b>Description:</b>
+					<p property="eventDescription"></p>
+				</div>
+				<div>Signup limit: 
+					<span type="number" mv-default="1000" property="limit"></span>
+				</div>
+				<div mv-if="eventName">Copy this link to share your event: <a href="?event=[util.eventId]">[eventName]</a></div>
+			</section>
+
+			<section mv-if="util.uid && util.eventId"
+							 mv-app="signup"
+							 mv-bar="none"
+							 class="debug-[url('debug')=='']"
+							 mv-plugins="firebase-firestore"
+							 mv-mode="[if(isOwner,'edit','read')]"
+							 mv-storage="[util.signupStore || 'none']"
+							 mv-storage-options="auth realtime"
+							 mv-autosave="3"
+							 mv-storage-key="AIzaSyC0PxY82lVLTLv80ZU1z5sz1azoYZits0I"
+							 >
+				<div property="mySignup" class="debug" mv-storage="none">
+					<div>Uid: <span  property="uid" mv-value="util.uid"></span></div>
+					<div>Name: <span property="name" mv-value="util.name"></span></div>
+					<div>Time: <span property="time" mv-value="$startup"></span></div>
+				</div>
+				<div property="signupChange" class="debug">
+					<div>Uid: <span  property="uid"></span></div>
+					<div>Name: <span property="name"></span></div>
+					<div>Time: <span property="time"></span></div>
+				</div>
+				<div class="debug">
+					<div>space: <span property="space" mv-value="count(signupList)<event.limit"></span></div>
+					<div>signed: <span property="signed" mv-value="count(signupList where uid=util.uid)"></span></div>
+					<div>signupTime: <span property="signupTime" mv-value="if(signed,get(first(signupList where uid=util.uid),'time'))"></span></div>
+
+				</div>
+				<button mv-if="signed"
+								mv-action="set(signupChange,first(signupList where uid=util.uid)),delete (signupList where uid=util.uid)">Cancel Signup</button>
+				<button mv-if="space && !signed"
+								mv-action="set(signupChange,mySignup),add(mySignup,signupList)">Sign Up</button>
+				<div mv-if="!space">Event is full</div>
+				<ul>
+					<li class="me-[uid=util.uid]" mv-multiple mv-initial-items="0" property="signupList">
+						<span property="name"></span>
+						<span class="debug" property="uid"></span>
+						<span class="debug" property="time"></span>
+					</li>
+				</ul>
+			</section>
+		</main>
+
+		<footer>Created by David Karger.  <a href="mailto:karger@mit.edu">Please send feedback.</a></footer>
+	</body>
+</html>
