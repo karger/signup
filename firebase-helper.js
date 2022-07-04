@@ -10,10 +10,9 @@ let firebaseReady = new Promise((resolve,reject) => {
 });
 
 Promise.all([Mavo.inited,firebaseReady]).then(([m,fb])=> {
-    fb.auth().onAuthStateChanged(()=>{
-	let u = firebase.auth().currentUser; 
-	Mavo.Node.get(document.getElementById("uid")).render(u.uid);
-	Mavo.Node.get(document.getElementById("name")).render(u.displayName);
-    }
-    );
+    Mavo.all.util.dataLoaded.then(() => {
+	fb.auth().onAuthStateChanged((auth)=>{
+	    Mavo.Node.get(document.getElementById("uid")).render(auth?.uid);
+	    Mavo.Node.get(document.getElementById("name")).render(auth?.displayName);});
+    });
 });
