@@ -19,12 +19,30 @@
 			[mv-mode=edit] .show-edit [property], [mv-mode=edit].show-edit [property] {
 					border: 1px solid black;
 			}
+			body {
+					display: flex;
+					min-height: 90vh;
+					flex-direction: column;
+			}
+			footer {
+					margin-top: auto;
+			}
+			main {
+					display: flex;
+					gap: 10ex;
+			}
+			header form {
+					float: right;
+			}
+			section {
+					min-width: 40%;
+			}
 		</style>
-		<script type="module" src="firebase-helper.js"></script>
+		<script tope="module" src="signup.js"></script>
 	</head>
 	<body>
 
-		<section mv-app="util"
+		<header mv-app="util"
 						 class="debug-[url('debug')=='']"
 						 mv-plugins="firebase-firestore"
 						 mv-bar="status login logout"
@@ -45,7 +63,7 @@
 				<input type="submit" value="Create an event">
 			</form>
 			<div mv-if="!uid">Please log in to use the signup tool</div>
-		</section>
+		</header>
 
 
 		<main>
@@ -53,29 +71,31 @@
 							 class="debug-[url('debug')==''] show-edit"
 							 mv-bar="none"
 							 mv-app="event"
-							 mv-plugins="firebase-firestore"
+							 mv-plugins="firebase-firestore share"
 							 mv-autosave="1"
 							 mv-mode="[if(isOwner,'edit','read')]"
 							 mv-storage="[if(util.uid,util.eventStore,'none')]"
 							 mv-storage-options="auth"
 							 mv-storage-key="AIzaSyC0PxY82lVLTLv80ZU1z5sz1azoYZits0I"
 							 >
+			<!--<button mv-action="set(eventName,'Test Event')">Modify</button>-->
 				<div class="debug">
 					<table>
 						<tr><td>ownerId<td property="ownerId" mv-default="[util.uid]"></tr>
 						<tr><td>isOwner<td property="isOwner" mv-storage="none" mv-value="util.uid && util.uid==ownerId"></tr>
+						<tr><td>Set title<td>[reTitle(eventName)]</tr>
 					</table>
 				</div>
-				<h2><span property="eventName"></span></h2>
+				<h2><span property="eventName" mv-default="My Event"></span></h2>
 				<div><time property="eventTime" mv-default="[$startup]"></time> by
 					<span property="organizerName" mv-default="[util.name]"></span></div>
 				<div><b>Description:</b>
 					<p property="eventDescription"></p>
 				</div>
 				<div>Signup limit: 
-					<span type="number" mv-default="1000" property="limit"></span>
+					<span type="number" mv-default="100" property="limit"></span>
 				</div>
-				<div mv-if="eventName">Copy this link to share your event: <a href="?event=[util.eventId]">[eventName]</a></div>
+				<button mv-if="eventName" mv-action="share(eventDescription,url(),eventName & ', ' & date(eventTime))">Share this Event</button>
 			</section>
 
 			<section mv-if="util.uid && util.eventId"
@@ -88,6 +108,7 @@
 							 mv-storage-options="auth all-can-edit realtime"
 							 mv-storage-key="AIzaSyC0PxY82lVLTLv80ZU1z5sz1azoYZits0I"
 							 >
+				<h2 mv-if="count(signupList)">Signed Up</h2>
 				<div property="mySignup" class="debug" mv-storage="none">
 					<div>Uid: <span  property="uid" mv-value="util.uid"></span></div>
 					<div>Name: <span property="name" mv-value="util.name"></span></div>

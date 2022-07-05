@@ -16,3 +16,8 @@ Promise.all([Mavo.inited,firebaseReady]).then(([m,fb])=> {
 	    Mavo.Node.get(document.getElementById("name")).render(auth?.displayName);});
     });
 });
+
+reTitle=function(title) {
+    document.title = title.valueOf() ? title : "Event Signup";
+    return title;
+}
