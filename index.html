@@ -16,6 +16,9 @@
 			.debug-true.debug, .debug-true .debug {
 					display: inherit;
 			}
+			[mv-mode=edit] .show-edit [property], [mv-mode=edit].show-edit [property] {
+					border: 1px solid black;
+			}
 		</style>
 		<script type="module" src="firebase-helper.js"></script>
 	</head>
@@ -25,9 +28,9 @@
 						 class="debug-[url('debug')=='']"
 						 mv-plugins="firebase-firestore"
 						 mv-bar="status login logout"
-						 mv-storage="https://mavo-cd7c3.firebaseio.com/mavo-apps/util"
-						 mv-storage-options="auth all-can-edit"
-						 mv-storage-key="AIzaSyC0PxY82lVLTLv80ZU1z5sz1azoYZits0I"
+						 mv-init="https://mavo-cd7c3.firebaseio.com/mavo-apps/util"
+						 mv-init-options="auth all-can-edit"
+						 mv-init-key="AIzaSyC0PxY82lVLTLv80ZU1z5sz1azoYZits0I"
 						 >
 			<table class="debug" mv-storage="none">
 				<tr><td>eventId<td property="eventId" mv-default="[url('eventId')]"></tr>
@@ -47,14 +50,14 @@
 
 		<main>
 			<section mv-if="util.uid && util.eventId"
-							 class="debug-[url('debug')=='']"
+							 class="debug-[url('debug')==''] show-edit"
 							 mv-bar="none"
 							 mv-app="event"
 							 mv-plugins="firebase-firestore"
-							 mv-autosave="5"
+							 mv-autosave="1"
 							 mv-mode="[if(isOwner,'edit','read')]"
 							 mv-storage="[if(util.uid,util.eventStore,'none')]"
-							 mv-storage-options="auth all-can-edit"
+							 mv-storage-options="auth"
 							 mv-storage-key="AIzaSyC0PxY82lVLTLv80ZU1z5sz1azoYZits0I"
 							 >
 				<div class="debug">
@@ -63,7 +66,6 @@
 						<tr><td>isOwner<td property="isOwner" mv-storage="none" mv-value="util.uid && util.uid==ownerId"></tr>
 					</table>
 				</div>
-				<h2 mv-if="isOwner">Edit your event</h2>
 				<h2><span property="eventName"></span></h2>
 				<div><time property="eventTime" mv-default="[$startup]"></time> by
 					<span property="organizerName" mv-default="[util.name]"></span></div>
