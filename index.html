@@ -24,6 +24,7 @@
 		<section mv-app="util"
 						 class="debug-[url('debug')=='']"
 						 mv-plugins="firebase-firestore"
+						 mv-bar="status login logout"
 						 mv-storage="https://mavo-cd7c3.firebaseio.com/mavo-apps/util"
 						 mv-storage-options="auth all-can-edit"
 						 mv-storage-key="AIzaSyC0PxY82lVLTLv80ZU1z5sz1azoYZits0I"
@@ -47,8 +48,8 @@
 		<main>
 			<section mv-if="util.uid && util.eventId"
 							 class="debug-[url('debug')=='']"
+							 mv-bar="none"
 							 mv-app="event"
-							 mv-bar="status login logout"
 							 mv-plugins="firebase-firestore"
 							 mv-autosave="3"
 							 mv-mode="[if(isOwner,'edit','read')]"
@@ -80,9 +81,8 @@
 							 mv-bar="none"
 							 class="debug-[url('debug')=='']"
 							 mv-plugins="firebase-firestore"
-							 mv-mode="[if(isOwner,'edit','read')]"
 							 mv-storage="[if(util.uid,util.signupStore,'none')]"
-							 mv-storage-options="auth realtime"
+							 mv-storage-options="auth all-can-edit realtime"
 							 mv-storage-key="AIzaSyC0PxY82lVLTLv80ZU1z5sz1azoYZits0I"
 							 >
 				<div property="mySignup" class="debug" mv-storage="none">
