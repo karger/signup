@@ -7,18 +7,17 @@
 		<link rel="stylesheet" href="https://get.mavo.io/stable/mavo.css">
 		<script src="https://get.mavo.io/stable/mavo.js"></script>
 		<style>
+			@media (max-width: 42ex) {
+					.hide-compact {
+							display: none
+					}
+			}
 			.me-true: {
 					font-weight: bold;
 			}
 			header: {
 					position: sticky;
 					top: 0;
-			}
-			.mv-logout.mv-logout.mv-logout {
-					order: 2
-			}
-			.mv-status.mv-status.mv-status {
-					order: 0
 			}
 			.debug {
 					display: none;
@@ -32,7 +31,7 @@
 			body {
 					box-sizing: border-box;
 					display: flex;
-					min-height: calc(98vh);
+					min-height: 100vh;
 					flex-direction: column;
 			}
 			footer {
@@ -77,14 +76,14 @@
 		<header id="controls" mv-app="controls" mv-storage="none" mv-plugins="share">
 			<form method="get" style="display:inline">
 				<input name="eventId" value="[''+$startup]" type="hidden">
-				<button id="create" type="submit">New Event</button>
+				<button id="create" type="submit">New  <span class="hide-compact">Event</span></button>
 			</form>
 			<span mv-if="util.eventId">
  				<button mv-if="signup.signed"
 								mv-action="set(signup.signupChange,first(signup.signupList where uid=util.uid)),delete (signup.signupList where uid=util.uid)">Cancel Signup</button>
 				<button mv-if="!signup.signed" disabled="[!signup.space]"
 								mv-action="set(signup.signupChange,signup.mySignup),add(signup.mySignup,signup.signupList)">[if(signup.space,'Sign Up','Event is Full')]</button>
-				<button mv-if="event.eventName" mv-action="share(event.eventDescription,url(),event.eventName & ', ' & date(event.eventTime))">Share Event</button>
+				<button mv-if="event.eventName" mv-action="share(event.eventDescription,url(),event.eventName & ', ' & date(event.eventTime))">Share <span class="hide-compact">Event</span></button>
 			</span>
 		</header>
 
@@ -114,7 +113,7 @@
 				<div><b>Description:</b>
 					<div property="eventDescription"></div>
 				</div>
-				<div>Signup limit: 
+				<div><b>Signup limit:</b> 
 					<span type="number" mv-default="50" property="limit"></span>
 				</div>
 			</section>
