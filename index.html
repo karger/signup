@@ -64,10 +64,10 @@
 						 >
 			<table class="debug" mv-storage="none">
 				<tr><td>eventId<td property="eventId" mv-default="[url('eventId')]"></tr>
-				<td><td>server<td property="https://mavo-cd7c3.firebaseio.com/"></tr>
+				<tr><td>server<td property="https://mavo-cd7c3.firebaseio.com/"></tr>
 				<tr><td>storePrefix<td property="storePrefix">https://mavo-cd7c3.firebaseio.com/mavo-apps/signup/</tr>
-				<tr><td>eventStore<td property="eventStore">[storePrefix & 'events/' & eventId]</tr>
-				<tr><td>signupStore<td property="signupStore">[storePrefix & 'signups/' & eventId]</tr>
+				<tr><td>eventStore<td property="eventStore">[if(uid,storePrefix & 'events/' & eventId,'none')]</tr>
+				<tr><td>signupStore<td property="signupStore">[if(uid,storePrefix & 'signups/' & eventId,'none')]</tr>
 				<tr><td>uid<td id="uid" property="uid"></tr>
 				<tr><td>name<td id="name" property="name"></tr>
 			</table>
@@ -91,16 +91,15 @@
 		<main>
 			<section mv-if="util.uid && util.eventId"
 							 class="debug-[url('debug')==''] show-edit"
-							 mv-bar="none"
 							 mv-app="event"
-							 mv-mode="[if(isOwner,'edit','read')]"
+							 mv-bar="none"
 							 mv-plugins="firebase-firestore share"
 							 mv-autosave="1"
-							 mv-storage="[if(util.uid,util.eventStore,'none')]"
+							 mv-storage="[util.eventStore]"
 							 mv-storage-options="auth"
 							 mv-storage-key="AIzaSyC0PxY82lVLTLv80ZU1z5sz1azoYZits0I"
 							 >
-				<button mv-action="set(eventName,'Test')">Test</button>
+					<div		 mv-mode="[if(isOwner,forceEdit && 'edit','read')]">
 				<div class="debug">
 					<table>
 						<tr><td>ownerId<td property="ownerId" mv-default="[util.uid]"></tr>
@@ -109,7 +108,8 @@
 					</table>
 				</div>
 
-				<h2><span property="eventName" mv-default="My Event" mv-mode="[if(isOwner,'edit','read')]"></span></h2>
+				<meta id="forceEdit" property="forceEdit" mv-value="false">
+				<h2><span property="eventName" mv-default="My Event"></span></h2>
 				<div><time property="eventTime" mv-default="[$startup]"></time> by
 					<span property="organizerName" mv-default="[util.name]"></span></div>
 				<div><b>Description:</b>
@@ -119,7 +119,8 @@
 				<div><b>Signup limit:</b> 
 					<span type="number" mv-default="50" property="limit"></span>
 				</div>
-				</div>
+					</div>
+					</div>
 			</section>
 
 			<section mv-if="util.uid && util.eventId"
@@ -128,7 +129,7 @@
 							 mv-autosave="3"
 							 class="debug-[url('debug')=='']"
 							 mv-plugins="firebase-firestore"
-							 mv-storage="[if(util.uid,util.signupStore,'none')]"
+							 mv-storage="[util.signupStore]"
 							 mv-storage-options="auth all-can-edit realtime"
 							 mv-storage-key="AIzaSyC0PxY82lVLTLv80ZU1z5sz1azoYZits0I"
 							 >

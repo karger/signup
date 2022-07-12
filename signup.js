@@ -10,6 +10,10 @@ let firebaseReady = new Promise((resolve,reject) => {
 });
 
 Promise.all([Mavo.inited,firebaseReady]).then(([m,fb])=> {
+    setTimeout(()=>{
+//	Mavo.Node.get(document.getElementById('forceEdit')).render(true);
+    }, 1000);
+
     Mavo.all.util.dataLoaded.then(() => {
 	fb.auth().onAuthStateChanged((auth)=>{
 	    Mavo.Node.get(document.getElementById("uid")).render(auth?.uid);
