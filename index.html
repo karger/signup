@@ -93,23 +93,23 @@
 							 class="debug-[url('debug')==''] show-edit"
 							 mv-app="event"
 							 mv-bar="none"
+							 mv-mode="read"
 							 mv-plugins="firebase-firestore share"
 							 mv-autosave="1"
 							 mv-storage="[util.eventStore]"
 							 mv-storage-options="auth"
 							 mv-storage-key="AIzaSyC0PxY82lVLTLv80ZU1z5sz1azoYZits0I"
 							 >
-					<div		 mv-mode="[if(isOwner,forceEdit && 'edit','read')]">
 				<div class="debug">
 					<table>
 						<tr><td>ownerId<td property="ownerId" mv-default="[util.uid]"></tr>
 						<tr><td>isOwner<td property="isOwner" mv-storage="none" mv-value="util.uid && util.uid==ownerId"></tr>
 						<tr><td>Set title<td>[reTitle(eventName)]</tr>
 					</table>
+					[setEdit(isOwner)]
 				</div>
 
-				<meta id="forceEdit" property="forceEdit" mv-value="false">
-				<h2><span property="eventName" mv-default="My Event"></span></h2>
+				<h2><span property="eventName"></span></h2>
 				<div><time property="eventTime" mv-default="[$startup]"></time> by
 					<span property="organizerName" mv-default="[util.name]"></span></div>
 				<div><b>Description:</b>
