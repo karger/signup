@@ -50,7 +50,7 @@
 					min-width: max(30%,30ex);
 			}
 		</style>
-		<script tope="module" src="signup.js"></script>
+		<script src="signup.js?cachebuster"></script>
 	</head>
 	<body>
 
@@ -81,10 +81,10 @@
 			</form>
 			<span mv-if="util.eventId">
  				<button mv-if="signup.signed"
-								mv-action="set(signup.signupChange,first(signup.signupList where uid=util.uid)),delete (signup.signupList where uid=util.uid)">Cancel Signup</button>
+								mv-action="set(signup.change,first(signup.ticket where uid=util.uid)),delete (signup.ticket where uid=util.uid)">Cancel Signup</button>
 				<button mv-if="!signup.signed" disabled="[!signup.space]"
-								mv-action="set(signup.signupChange,signup.mySignup),add(signup.mySignup,signup.signupList)">[if(signup.space,'Sign Up','Event is Full')]</button>
-				<button mv-if="event.eventName" mv-action="share(event.eventDescription,url(),event.eventName & ', ' & date(event.eventTime))">Share <span class="hide-compact">Event</span></button>
+								mv-action="set(signup.change,signup.mySignup),add(signup.mySignup,signup.ticket)">[if(signup.space,'Sign Up','Event is Full')]</button>
+				<button mv-if="event.title" mv-action="share(event.description,url(),event.title & ', ' & date(event.time))">Share <span class="hide-compact">Event</span></button>
 			</span>
 		</header>
 
@@ -104,18 +104,16 @@
 					<table>
 						<tr><td>ownerId<td property="ownerId" mv-default="[util.uid]"></tr>
 						<tr><td>isOwner<td property="isOwner" mv-storage="none" mv-value="util.uid && util.uid==ownerId"></tr>
-						<tr><td>Set title<td>[reTitle(eventName)]</tr>
+						<tr><td>Set title<td>[reTitle(title)]</tr>
 					</table>
 					[setEdit(isOwner)]
 				</div>
-
-				<h2><span property="eventName"></span></h2>
-				<div><time property="eventTime" mv-default="[$startup]"></time> by
+				<h2><span property="title" mv-alias="eventName"></span></h2>
+				<div><time property="time" mv-alias="eventTime" mv-default="[$startup]"></time> by
 					<span property="organizerName" mv-default="[util.name]"></span></div>
 				<div><b>Description:</b>
-					<div property="eventDescription"></div>
+					<div property="description" mv-alias="eventDescription"></div>
 				</div>
-				<meta property="edited" mv-storage="inherit" mv-value="eventName != 'My Event' || eventTime != $startup">
 				<div><b>Signup limit:</b> 
 					<span type="number" mv-default="50" property="limit"></span>
 				</div>
@@ -139,21 +137,21 @@
 						<div>Name: <span property="name" mv-value="util.name"></span></div>
 						<div>Time: <span property="time" mv-value="$startup"></span></div>
 					</div>
-					<div property="signupChange">
+					<div property="change" mv-alias="signupChange">
 						<div>Uid: <span  property="uid"></span></div>
 						<div>Name: <span property="name"></span></div>
 						<div>Time: <span property="time"></span></div>
 					</div>
-					<div>space: <span property="space" mv-value="count(signupList)<event.limit"></span></div>
-					<div>signed: <span property="signed" mv-value="count(signupList where uid=util.uid)"></span></div>
-					<div>signupTime: <span property="signupTime" mv-value="if(signed,get(first(signupList where uid=util.uid),'time'))"></span></div>
+					<div>space: <span property="space" mv-value="count(ticket)<event.limit"></span></div>
+					<div>signed: <span property="signed" mv-value="count(ticket where uid=util.uid)"></span></div>
+					<div>signupTime: <span property="signupTime" mv-value="if(signed,get(first(ticket where uid=util.uid),'time'))"></span></div>
 				</div>
 
-				<h2 mv-if="count(signupList)">Signup List</h2>
-				<div mv-if="space">[event.limit-count(signupList)] spots remain.</div>
+				<h2 mv-if="count(ticket)">Signup List</h2>
+				<div mv-if="space">[event.limit-count(ticket)] spots remain.</div>
 
 				<ul>
-					<li class="me-[uid=util.uid]" mv-multiple mv-initial-items="0" property="signupList">
+					<li class="me-[uid=util.uid]" mv-multiple mv-initial-items="0" property="ticket" mv-alias="signupList">
 						<span property="name"></span>
 						<span class="debug" property="uid"></span>
 						<span class="debug" property="time"></span>
@@ -167,8 +165,8 @@
 				<h2 mv-if="count(events)>0">My Events</h2>
 				<ul>
 					<li property="events" mv-multiple mv-initial-items="0">
-						<button mv-action="fbDelete('mavo-apps/signup/events/' & eventId), fbDelete('mavo-apps/signup/signups/' & eventId)">X</button>
-						<a href="?eventId=[eventId]"><span property="eventName"></span></a>, <time property="eventTime"></time>
+						<button mv-action="fbDelete('mavo-apps/signup/events/' & eventId), fbDelete('mavo-apps/signup/signups/' & eventId), if(eventId == event.eventId,delete(event.title))">X</button>
+						<a href="?eventId=[eventId]"><span property="title" mv-alias="eventName"></span></a>, <time property="time"></time>
 						<span class="debug"><span property="eventId"><span></span>
 					</li>
 				</ul>

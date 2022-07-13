@@ -44,10 +44,10 @@ trackMyEvents = function(eventStore,uid) {
 		  query.onSnapshot((results) => {
 				myEvents = [];
 				results.forEach((doc)=> {
-					 let {eventName, eventTime} = doc.data();
+					 let {title, time} = doc.data();
 					 let eventId = doc.id;
-					 myEvents.push({eventId: eventId, eventName: eventName,
-										 eventTime: eventTime});
+					 myEvents.push({eventId: eventId, title: title,
+													time: time});
 				});
 				outputNode.render(myEvents);
 		  });
