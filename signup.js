@@ -11,6 +11,7 @@ let firebaseReady = new Promise((resolve,reject) => {
 
 Promise.all([Mavo.inited,firebaseReady]).then(([m,fb])=> {
 	 Mavo.all.util.dataLoaded.then(() => {
+		  document.body.classList.remove("before-mavo");
 		  fb.auth().onAuthStateChanged((auth)=>{
 				Mavo.Node.get(document.getElementById("uid")).render(auth?.uid);
 				Mavo.Node.get(document.getElementById("name")).render(auth?.displayName);});

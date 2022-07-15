@@ -29,7 +29,7 @@
 			.debug-true.debug, .debug-true .debug {
 					display: inherit;
 			}
-			.debug-true.debug [property]::before, .debug-true .debug [property]::before {
+			.debug [property]::before, .debug [property]::before {
 					content: attr(property) ": "
 			}
 			[mv-mode=edit] .show-edit [property], [mv-mode=edit].show-edit [property] {
@@ -65,10 +65,13 @@
 			section {
 					min-width: max(30%,30ex);
 			}
+			.before-mavo [mv-if] {
+					display: none;
+			}
 		</style>
 		<script src="signup.js?cachebuster"></script>
 	</head>
-	<body>
+	<body class="before-mavo">
 
 		<header mv-app="util"
 						 class="debug-[url('debug')=='']"
@@ -99,7 +102,7 @@
 								mv-action="set(signup.change,first(signup.ticket where uid=util.uid)),delete (signup.ticket where uid=util.uid)">Cancel Signup</button>
 				<button mv-if="!signup.signed  && event.title" disabled="[!signup.space]"
 								mv-action="set(signup.change,signup.mine),add(signup.mine,signup.ticket)">[if(signup.space,'Sign Up','Event is Full')]</button>
-				<button mv-if="event.title" mv-action="share(event.description,url(),event.title & ', ' & date(event.time))">Share <span class="hide-compact">Event</span></button>
+				<button mv-if="event.title" mv-action="share(event.description,url(),event.title & ', ' & date(event.time))"><img src="share.png" style="width: .8em; vertical-align:middle"><span class="hide-compact"> Share Event</span></button>
 			</span>
 		</header>
 
@@ -157,13 +160,14 @@
 						<div property="name"></div>
 						<div property="time"></div>
 					</div>
-					<div property="space" mv-value="count(ticket)<event.limit"></div>
+					<div property="space" mv-value="max(0,event.limit - count(ticket))"></div>
 					<div property="signed" mv-value="count(ticket where uid=util.uid)"></div>
 					<div property="signupTime" mv-value="if(signed,get(first(ticket where uid=util.uid),'time'))"></div>
 				</div>
 
 				<h2 mv-if="count(ticket)">Signup List</h2>
-				<div mv-if="space">[event.limit-count(ticket)] spots remain.</div>
+				<div mv-if="space>1">[event.limit-count(ticket)] spots remain.</div>
+				<div mv-if="space==1">1 spot remains</div>
 				<div mv-if="!space">Event is full</div>
 				
 				<ul>
@@ -177,8 +181,9 @@
 
 			<section mv-app="listEvents" 
  							 class="debug-[url('debug')=='']"
+							 mv-if="count(events)>0"
 							 mv-storage="none" mv-bar="none">
-				<h2 mv-if="count(events)>0">My Events</h2>
+				<h2>My Events</h2>
 				<ul>
 					<li property="events" mv-if="title || url('cleanup')==''" mv-multiple
 							mv-initial-items="0">
