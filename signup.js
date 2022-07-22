@@ -28,9 +28,10 @@ setEdit = function(on) {
 	 ?.setAttribute("mv-mode", on?.valueOf() ? "edit" : "read");
 }
 
-trackMyEvents = function(eventStore,uid) {
+trackMyEvents = function(eventStore,uid,all) {
 	 uid = uid.valueOf();
 	 eventStore = eventStore.valueOf();
+	 all=all.valueOf();
 	 if (!uid || !eventStore) {
 		  return;
 	 }
@@ -41,14 +42,17 @@ trackMyEvents = function(eventStore,uid) {
 		  while (path.length > 1) {
 				query=query.collection(path.shift()).doc(path.shift());
 		  }
-		  query = query.collection(path.shift()).where('ownerId','==',uid);
+		  query = query.collection(path.shift());
+		  if (!all) {
+				query = query.where('ownerId','==',uid);
+		  }
 		  query.onSnapshot((results) => {
 				myEvents = [];
 				results.forEach((doc)=> {
-					 let {title, time} = doc.data();
+					 let {title, time, organizerName, ownerId} = doc.data();
 					 let eventId = doc.id;
 					 myEvents.push({eventId: eventId, title: title,
-													time: time});
+										 time: time, ownerId: ownerId, organizerName: organizerName});
 				});
 				outputNode.render(myEvents);
 		  });
