@@ -23,6 +23,9 @@
 					position: sticky;
 					top: 0;
 			}
+			.hide-if-true {
+					display: none;
+			}
 			.debug {
 					display: none;
 			}
@@ -107,9 +110,9 @@
 		</header>
 
 		<main>
-			<section mv-if="util.uid && util.eventId"
+			<section mv-app="event"
+							 mv-if="util.uid && util.eventId"
 							 class="debug-[url('debug')==''] show-edit"
-							 mv-app="event"
 							 mv-bar="none"
 							 mv-mode="read"
 							 mv-plugins="firebase-firestore share"
@@ -179,21 +182,22 @@
 				</ul>
 			</section>
 
+
 			<section mv-app="listEvents" 
- 							 class="debug-[url('debug')=='']"
-							 mv-if="count(events)>0"
+ 							 class="debug-[url('debug')==''] hide-if-[count(events)==0 && !url('owner')]"
 							 mv-storage="none" mv-bar="none">
-				<h2>My Events</h2>
+				<meta property="ownerId" mv-value="url('owner') || util.uid">
+				<h2>[if(ownerId==util.uid,'My',first(organizerName))] Events</h2>
 				<ul>
-					<li property="events" mv-if="title || url('cleanup')==''" mv-multiple
+					<li property="events" mv-multiple
 							mv-initial-items="0">
 						<button mv-action="fbDelete('mavo-apps/signup/events/' & eventId), fbDelete('mavo-apps/signup/signups/' & eventId), if(eventId == event.eventId,delete(event.title))">X</button>
-						<meta property="title"><meta property="ownerId">
+						<meta property="title"><meta property="ownerId"><meta property="eventId">
 						<a href="?eventId=[eventId]">[if(title,title,"Untitled")]</a>, <time property="time"></time> <span mv-if="ownerId != util.uid">(<span property="organizerName"></span>)
 						<span class="debug"><span property="eventId"><span></span>
 					</li>
 				</ul>
-				[trackMyEvents("mavo-apps/signup/events",util.uid,url('all')=='')]
+				[trackEvents("mavo-apps/signup/events",ownerId,url('all')=='')]
 			</section>
 		</main>
 

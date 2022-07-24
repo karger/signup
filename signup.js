@@ -28,7 +28,7 @@ setEdit = function(on) {
 	 ?.setAttribute("mv-mode", on?.valueOf() ? "edit" : "read");
 }
 
-trackMyEvents = function(eventStore,uid,all) {
+trackEvents = function(eventStore,uid,all) {
 	 uid = uid.valueOf();
 	 eventStore = eventStore.valueOf();
 	 all=all.valueOf();
