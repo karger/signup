@@ -28,11 +28,10 @@ setEdit = function(on) {
 	 ?.setAttribute("mv-mode", on?.valueOf() ? "edit" : "read");
 }
 
-trackEvents = function(eventStore,uid,all) {
+trackEvents = function(eventStore,uid) {
 	 uid = uid.valueOf();
 	 eventStore = eventStore.valueOf();
-	 all=all.valueOf();
-	 if (!uid || !eventStore) {
+	 if (uid==="" || !eventStore) { //not fully initialized
 		  return;
 	 }
 	 firebaseReady.then((fb) => {
@@ -43,20 +42,17 @@ trackEvents = function(eventStore,uid,all) {
 				query=query.collection(path.shift()).doc(path.shift());
 		  }
 		  query = query.collection(path.shift());
-		  if (!all) {
+		  if (uid) {
 				query = query.where('ownerId','==',uid);
 		  }
-		  query.onSnapshot((results) => {
+		  trackEvents.cancel?.(); //cancel old snapshot listener on change
+		  trackEvents.cancel = query.onSnapshot((results) => {
 				myEvents = [];
 				results.forEach((doc)=> {
-//					 let {title, time, organizerName, ownerId} = doc.data();
-//					 let eventId = doc.id;
-//					 myEvents.push({eventId: eventId, title: title,
-//										 time: time, ownerId: ownerId, organizerName: organizerName});
 					 myEvents.push({eventId: doc.id, ...doc.data()});
 				});
 				myEvents.sort((a,b) => {
-					 return b.time - a.time
+					 return Date.parse(b.time) - Date.parse(a.time); 
 				});
 				outputNode.render(myEvents);
 		  });
