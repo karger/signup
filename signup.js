@@ -26,6 +26,11 @@ reTitle=function(title) {
 setEdit = function(on) {
 	 document.querySelector('[mv-app=event]')
 	 ?.setAttribute("mv-mode", on?.valueOf() ? "edit" : "read");
+	 return on;
+}
+
+absoluteURL = function(u) {
+	 return new URL(u.valueOf(),document.location).toString();
 }
 
 trackEvents = function(eventStore,uid) {
