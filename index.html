@@ -208,7 +208,7 @@
 				<ul>
 					<li property="events" mv-multiple
 							mv-initial-items="0">
-						<button mv-action="fbDelete('mavo-apps/signup/events/' & eventId), fbDelete('mavo-apps/signup/signups/' & eventId), if(eventId == event.eventId,delete(event.title))">X</button>
+						<button mv-if="util.uid==ownerId" mv-action="fbDelete('mavo-apps/signup/events/' & eventId), fbDelete('mavo-apps/signup/signups/' & eventId), if(eventId == event.eventId,delete(event.title))">X</button>
 						<meta property="title"><meta property="ownerId"><meta property="eventId"><meta property="organizerName">
 						<a href="?eventId=[eventId]">[title || "Untitled"]</a>, <time property="time"></time> <span mv-if="ownerId != listEvents.ownerId">(<span property="organizerName"></span>)</span>
 					</li>
