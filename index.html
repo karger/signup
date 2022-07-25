@@ -199,7 +199,7 @@
 							 mv-storage="none" mv-bar="none"
 							 mv-plugins="share">
 				<meta property="ownerId" mv-value="if(url('all')=='',0,url('owner') || util.uid)">
-				<h2>[if(ownerId==util.uid,'My',first(organizerName))] Events</h2>
+				<h2>[if(ownerId==util.uid,'My',first(events.organizerName))] Events</h2>
 				<div mv-if="ownerId=util.uid">
 					<button mv-if="count(events)>0" mv-action="share(util.name & ' Events',absoluteURL('?owner=' & ownerId),util.name & ' Events')">
 						<img class="share" src="share.png"> Share My List
@@ -209,8 +209,8 @@
 					<li property="events" mv-multiple
 							mv-initial-items="0">
 						<button mv-action="fbDelete('mavo-apps/signup/events/' & eventId), fbDelete('mavo-apps/signup/signups/' & eventId), if(eventId == event.eventId,delete(event.title))">X</button>
-						<meta property="title"><meta property="ownerId"><meta property="eventId">
-						<a href="?eventId=[eventId]">[title || "Untitled"]</a>, <time property="time"></time> <span mv-if="ownerId != util.uid">(<span property="organizerName"></span>)</span>
+						<meta property="title"><meta property="ownerId"><meta property="eventId"><meta property="organizerName">
+						<a href="?eventId=[eventId]">[title || "Untitled"]</a>, <time property="time"></time> <span mv-if="ownerId != listEvents.ownerId">(<span property="organizerName"></span>)</span>
 					</li>
 				</ul>
 				[trackEvents("mavo-apps/signup/events",ownerId)]
