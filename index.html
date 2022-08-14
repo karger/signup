@@ -150,6 +150,10 @@
 					<div><b>Signup limit:</b> 
 						<span type="number" mv-default="50" property="limit"></span>
 					</div>
+					<div mv-if="isOwner">
+						<b>Notes (private to creator)</b>
+						<div property="notes"></div>
+					</div>
 				</div>
 			</section>
 
