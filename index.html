@@ -12,6 +12,31 @@
 							display: none
 					}
 			}
+			#signups {
+					display: grid;
+					column-gap: 10px;
+					grid-template-columns: max-content 20px 20px 20px 20px;
+					align-items: center;
+			}
+			#signups > li {
+					display: contents;
+			}
+			[type=radio] {
+					position: fixed;
+					opacity: 0;3
+					pointer-events: none;
+			}
+			.radio-icon {
+					width: 25px;
+					opacity: 30%;
+			}
+			input:hover ~ .radio-icon {
+					opacity: 100%;
+					width: 25px;
+			}
+			input:checked ~ .radio-icon {
+					opacity: 100%;
+			}
 			[mv-app="event"] > * {
 					margin: 1ex;
 					padding: .5ex
@@ -113,7 +138,7 @@
 								mv-action="set(signup.change,first(signup.ticket where uid=util.uid)),delete (signup.ticket where uid=util.uid)">Cancel Signup</button>
 				<button mv-if="!signup.signed  && event.title" disabled="[!signup.space]"
 								mv-action="set(signup.change,signup.mine),add(signup.mine,signup.ticket)">[if(signup.space,'Sign Up','Event is Full')]</button>
-				<button mv-if="event.title" mv-action="share(event.description,url(),event.title & ', ' & date(event.time))"><img class="share" src="share.png"><span class="hide-compact"> Share Event</span></button>
+				<button mv-if="event.title" mv-action="share(text: event.description, url: url(),title: event.title & ', ' & date(event.time))"><img class="share" src="share.png"><span class="hide-compact"> Share Event</span></button>
 			</span>
 		</header>
 
@@ -167,16 +192,19 @@
 							 mv-storage-options="auth all-can-edit realtime"
 							 mv-storage-key="AIzaSyC0PxY82lVLTLv80ZU1z5sz1azoYZits0I"
 							 >
+				
 				<div class="debug">
 					<div property="mine" mv-storage="none">
 						<div property="uid" mv-value="util.uid"></div>
 						<div property="name" mv-value="util.name"></div>
 						<div property="time" mv-value="$startup"></div>
+						<div property="payment"></div>
 					</div>
 					<div property="change">
 						<div property="uid"></div>
 						<div property="name"></div>
 						<div property="time"></div>
+						<div property="payment"></div>
 					</div>
 					<div property="space" mv-value="max(0,event.limit - count(ticket))"></div>
 					<div property="signed" mv-value="count(ticket where uid=util.uid)"></div>
@@ -188,9 +216,13 @@
 				<div mv-if="space==1">1 spot remains</div>
 				<div mv-if="space<1">Event is full</div>
 				
-				<ul>
+				<ul id="signups">
 					<li class="me-[uid=util.uid]" mv-multiple mv-initial-items="0" property="ticket">
 						<span property="name"></span>
+						<label mv-if="event.isOwner"><input type="radio" name="payment" value="cash" property="payment" mv-default="none"><img class="radio-icon" src="cash.png"></label>
+						<label mv-if="event.isOwner"><input type="radio" name="payment" value="check"><img class="radio-icon" src="check.jpg"></label>
+						<label mv-if="event.isOwner"><input type="radio" name="payment" value="venmo"><img class="radio-icon" src="venmo.png"></label>
+						<label mv-if="event.isOwner"><input type="radio" name="payment" value="none"><img class="radio-icon" src="circle.png"></label>
 						<span class="debug" property="uid"></span>
 						<span class="debug" property="time"></span>
 					</li>
@@ -205,7 +237,7 @@
 				<meta property="ownerId" mv-value="if(url('all')=='',0,url('owner') || util.uid)">
 				<h2>[if(ownerId==util.uid,'My',first(events.organizerName))] Events</h2>
 				<div mv-if="ownerId=util.uid">
-					<button mv-if="count(events)>0" mv-action="share(util.name & ' Events',absoluteURL('?owner=' & ownerId),util.name & ' Events')">
+					<button mv-if="count(events)>0" mv-action="share(text: util.name & ' Events',url: absoluteURL('?owner=' & ownerId),title: util.name & ' Events')">
 						<img class="share" src="share.png"> Share My List
 					</button>
 				</div>
