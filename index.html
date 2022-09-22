@@ -15,7 +15,7 @@
 			#signups {
 					display: grid;
 					column-gap: 10px;
-					grid-template-columns: max-content 20px 20px 20px 20px;
+					grid-template-columns: max-content 160px;
 					align-items: center;
 			}
 			#signups > li {
@@ -51,6 +51,12 @@
 			ul {
 					list-style-position: inside;
 					padding-left: 0;
+			}
+			.hide {
+					display: none;
+			}
+			.hide.show-if-true {
+					display :inherit;
 			}
 			.hide-if-true {
 					display: none;
@@ -219,12 +225,21 @@
 				<ul id="signups">
 					<li class="me-[uid=util.uid]" mv-multiple mv-initial-items="0" property="ticket">
 						<span property="name"></span>
-						<label mv-if="event.isOwner"><input type="radio" name="payment" value="cash" property="payment" mv-default="none"><img class="radio-icon" src="cash.png"></label>
-						<label mv-if="event.isOwner"><input type="radio" name="payment" value="check"><img class="radio-icon" src="check.jpg"></label>
-						<label mv-if="event.isOwner"><input type="radio" name="payment" value="venmo"><img class="radio-icon" src="venmo.png"></label>
-						<label mv-if="event.isOwner"><input type="radio" name="payment" value="none"><img class="radio-icon" src="circle.png"></label>
-						<span class="debug" property="uid"></span>
-						<span class="debug" property="time"></span>
+						<span>
+							<span class="hide show-if-[event.isOwner]">
+								<label><input type="radio" name="payment" property="payment"
+															value="cash"><img class="radio-icon" src="cash.png"></label>
+								<label><input type="radio" name="payment"
+															value="check"><img class="radio-icon" src="check.jpg"></label>
+								<label><input type="radio" name="payment"
+															value="venmo"><img class="radio-icon" src="venmo.png"></label>
+								<label><input type="radio" name="payment"
+															value="none"><img class="radio-icon" src="circle.png"></label>
+								[payment]
+								<span class="debug" property="uid"></span>
+								<span class="debug" property="time"></span>
+							</span>
+						</span>
 					</li>
 				</ul>
 			</section>
