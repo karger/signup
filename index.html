@@ -15,24 +15,27 @@
 			#signups {
 					display: grid;
 					column-gap: 10px;
-					grid-template-columns: max-content 160px;
+					grid-template-columns: max-content 200px;
 					align-items: center;
 			}
 			#signups > li {
 					display: contents;
 			}
+			img[src="bank-check.png"] {
+					transform: translate(0, -5px);
+			}
 			[type=radio] {
 					position: fixed;
-					opacity: 0;3
+					opacity: 0%;
 					pointer-events: none;
 			}
 			.radio-icon {
-					width: 25px;
+					width: 32px;
 					opacity: 30%;
 			}
 			input:hover ~ .radio-icon {
 					opacity: 100%;
-					width: 25px;
+					width: 32px;
 			}
 			input:checked ~ .radio-icon {
 					opacity: 100%;
@@ -227,13 +230,16 @@
 						<span property="name"></span>
 						<span>
 							<span class="hide show-if-[event.isOwner]">
-								<label><input type="radio" name="payment" property="payment"
-															value="cash"><img class="radio-icon" src="cash.png"></label>
-								<label><input type="radio" name="payment"
-															value="check"><img class="radio-icon" src="check.jpg"></label>
-								<label><input type="radio" name="payment"
+								<label><input type="radio" name="payment[$index]"
+															property="payment"
+															value="cash"><img class="radio-icon" src="dollar.png"></label>
+								<!--<a href="https://www.flaticon.com/free-icons/dollar" title="dollar icons">Dollar icons created by Icongeek26 - Flaticon</a>-->
+								<label><input type="radio" name="payment[$index]"
+															value="check"><img class="radio-icon" src="bank-check.png"></label>
+								<!--<a href="https://www.flaticon.com/free-icons/bank-check" title="bank check icons">Bank check icons created by Iconjam - Flaticon</a>-->
+								<label><input type="radio" name="payment[$index]"
 															value="venmo"><img class="radio-icon" src="venmo.png"></label>
-								<label><input type="radio" name="payment"
+								<label><input type="radio" name="payment[$index]"
 															value="none"><img class="radio-icon" src="circle.png"></label>
 								[payment]
 								<span class="debug" property="uid"></span>
@@ -246,7 +252,7 @@
 
 
 			<section mv-app="listEvents" 
- 							 class="debug-[url('debug')==''] hide-if-[count(events)==0 && !url('owner')]"
+ 							 class="debug-[url('debug')==''] hide show-if-[count(events)>0 || url('owner')]"
 							 mv-storage="none" mv-bar="none"
 							 mv-plugins="share">
 				<meta property="ownerId" mv-value="if(url('all')=='',0,url('owner') || util.uid)">
