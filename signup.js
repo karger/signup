@@ -18,11 +18,6 @@ Promise.all([Mavo.inited,firebaseReady]).then(([m,fb])=> {
 	 });
 });
 
-reTitle=function(title) {
-	 document.title = title.valueOf() ? title : "Event Signup";
-	 return title;
-}
-
 setEdit = function(on) {
 	 document.querySelector('[mv-app=event]')
 	 ?.setAttribute("mv-mode", on?.valueOf() ? "edit" : "read");

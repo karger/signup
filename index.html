@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
+	<head mv-app="head" mv-bar="none" mv-expressions="none">
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width">
-		<title>Event Signup</title>
+		<title mv-value="if(event.title,event.title,'Event Signup')">Event Signup</title>
 		<link rel="stylesheet" href="https://get.mavo.io/stable/mavo.css">
 		<script src="https://get.mavo.io/stable/mavo.js"></script>
 		<style>
@@ -173,7 +173,6 @@
 					<div>
 						<div property="ownerId" mv-default="[util.uid]"></div>
 						<div property="isOwner" mv-storage="none" mv-value="util.uid && util.uid==ownerId"></div>
-						<div>Set title: [reTitle(title)]</div>
 						<div>Set edit: [setEdit(isOwner)]</div>
 					</div>
 				</div>
