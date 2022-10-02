@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width">
-		<title>Event Signups</title>
+		<title>Event Signup</title>
 		<link rel="stylesheet" href="https://get.mavo.io/stable/mavo.css">
 		<script src="https://get.mavo.io/stable/mavo.js"></script>
 		<style>
@@ -33,9 +33,15 @@
 					width: 32px;
 					opacity: 30%;
 			}
+			.radio-icon:hover {
+					opacity: 100%;
+			}
 			input:hover ~ .radio-icon {
 					opacity: 100%;
 					width: 32px;
+			}
+			.radio-icon.selected-true {
+					opacity: 100%;
 			}
 			input:checked ~ .radio-icon {
 					opacity: 100%;
@@ -230,20 +236,29 @@
 						<span property="name"></span>
 						<span>
 							<span class="hide show-if-[event.isOwner]">
+								<!--
 								<label><input type="radio" name="payment[$index]"
 															property="payment"
 															value="cash"><img class="radio-icon" src="dollar.png"></label>
 								<!--<a href="https://www.flaticon.com/free-icons/dollar" title="dollar icons">Dollar icons created by Icongeek26 - Flaticon</a>-->
+								<!--
 								<label><input type="radio" name="payment[$index]"
 															value="check"><img class="radio-icon" src="bank-check.png"></label>
 								<!--<a href="https://www.flaticon.com/free-icons/bank-check" title="bank check icons">Bank check icons created by Iconjam - Flaticon</a>-->
+								<!--
 								<label><input type="radio" name="payment[$index]"
 															value="venmo"><img class="radio-icon" src="venmo.png"></label>
 								<label><input type="radio" name="payment[$index]"
 															value="none"><img class="radio-icon" src="circle.png"></label>
-								[payment]
+								<span class="debug">[payment]</span>
 								<span class="debug" property="uid"></span>
 								<span class="debug" property="time"></span>
+								-->
+								<meta property="payment">
+								<img class="radio-icon selected-[payment=='cash']" src="dollar.png" mv-action="set(payment,'cash')">
+								<img class="radio-icon selected-[payment=='check']" src="bank-check.png" mv-action="set(payment,'check')">
+								<img class="radio-icon selected-[payment=='venmo']" src="venmo.png" mv-action="set(payment,'venmo')">
+								<img class="radio-icon selected-[payment=='none']" src="circle.png" mv-action="set(payment,'none')">
 							</span>
 						</span>
 					</li>
