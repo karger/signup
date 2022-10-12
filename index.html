@@ -15,7 +15,7 @@
 			#signups {
 					display: grid;
 					column-gap: 10px;
-					grid-template-columns: max-content 200px;
+					grid-template-columns: 2em max-content 200px;
 					align-items: center;
 			}
 			#signups > li {
@@ -33,7 +33,8 @@
 					width: 32px;
 					opacity: 30%;
 			}
-			.radio-icon:hover {
+			.radio-icon:hover.selected-false {
+					cursor: pointer;
 					opacity: 100%;
 			}
 			input:hover ~ .radio-icon {
@@ -230,30 +231,13 @@
 				<div mv-if="space==1">1 spot remains</div>
 				<div mv-if="space<1">Event is full</div>
 				
-				<ul id="signups">
-					<li class="me-[uid=util.uid]" mv-multiple mv-initial-items="0" property="ticket">
+				<ul id="signups" mv-list="ticket">
+					<li class="me-[uid=util.uid]"  mv-multiple="ticket"  mv-initial-items="0">
+						<span><button mv-if="event.isOwner" mv-action="delete(ticket)">X</button></span>
 						<span property="name"></span>
 						<span>
 							<span class="hide show-if-[event.isOwner]">
-								<!--
-								<label><input type="radio" name="payment[$index]"
-															property="payment"
-															value="cash"><img class="radio-icon" src="dollar.png"></label>
-								<!--<a href="https://www.flaticon.com/free-icons/dollar" title="dollar icons">Dollar icons created by Icongeek26 - Flaticon</a>-->
-								<!--
-								<label><input type="radio" name="payment[$index]"
-															value="check"><img class="radio-icon" src="bank-check.png"></label>
-								<!--<a href="https://www.flaticon.com/free-icons/bank-check" title="bank check icons">Bank check icons created by Iconjam - Flaticon</a>-->
-								<!--
-								<label><input type="radio" name="payment[$index]"
-															value="venmo"><img class="radio-icon" src="venmo.png"></label>
-								<label><input type="radio" name="payment[$index]"
-															value="none"><img class="radio-icon" src="circle.png"></label>
-								<span class="debug">[payment]</span>
-								<span class="debug" property="uid"></span>
-								<span class="debug" property="time"></span>
-								-->
-								<meta property="payment">
+								<meta style="display:none" property="payment">
 								<img class="radio-icon selected-[payment=='cash']" src="dollar.png" mv-action="set(payment,'cash')">
 								<img class="radio-icon selected-[payment=='check']" src="bank-check.png" mv-action="set(payment,'check')">
 								<img class="radio-icon selected-[payment=='venmo']" src="venmo.png" mv-action="set(payment,'venmo')">
@@ -262,6 +246,7 @@
 						</span>
 					</li>
 				</ul>
+				<span mv-if="event.isOwner"><input property="newName" mv-storage="none"> <button mv-action="add(name: newName, ticket), delete(newName)">Add</button></span>
 			</section>
 
 
@@ -293,4 +278,26 @@
 			<div>Created by David Karger.  <a href="mailto:karger@mit.edu">Please send feedback.</a></div>
 		</footer>
 	</body>
+	<!--
+			broken radio button method
+								<label><input type="radio" name="payment[$index]"
+															property="payment"
+															value="cash"><img class="radio-icon" src="dollar.png"></label>
+								<!--<a href="https://www.flaticon.com/free-icons/dollar" title="dollar icons">Dollar icons created by Icongeek26 - Flaticon</a>-->
+								<!--
+								<label><input type="radio" name="payment[$index]"
+															value="check"><img class="radio-icon" src="bank-check.png"></label>
+								<!--<a href="https://www.flaticon.com/free-icons/bank-check" title="bank check icons">Bank check icons created by Iconjam - Flaticon</a>-->
+								<!--
+								<label><input type="radio" name="payment[$index]"
+															value="venmo"><img class="radio-icon" src="venmo.png"></label>
+								<label><input type="radio" name="payment[$index]"
+															value="none"><img class="radio-icon" src="circle.png"></label>
+								<span class="debug">[payment]</span>
+								<span class="debug" property="uid"></span>
+								<span class="debug" property="time"></span>
+								-->
+
+
 </html>
+
