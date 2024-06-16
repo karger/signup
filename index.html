@@ -152,10 +152,14 @@
 			</form>
 			<span mv-if="util.eventId">
  				<button mv-if="signup.signed"
-								mv-action="set(signup.change,first(signup.ticket where uid=util.uid)),delete (signup.ticket where uid=util.uid)">Cancel Signup</button>
-				<button mv-if="event.title && !signup.signed" disabled="[!signup.space]"
-								mv-action="set(signup.change,signup.mine),add(signup.mine,signup.ticket)">[if(signup.space,'Sign Up','Event is Full')]</button>
-				<button mv-if="event.title" mv-action="share(text: event.description, url: url(),title: event.title & ', ' & date(event.time))"><img class="share" src="share.png"><span class="hide-compact"> Share Event</span></button>
+								mv-action="set(signup.change,first(signup.ticket where uid=util.uid)),delete (signup.ticket where uid=util.uid)"
+								>Cancel Signup</button>
+				<button mv-if="!signup.signed && event.title" disabled="[!signup.space]"
+								mv-action="set(signup.change,signup.mine),add(signup.mine,signup.ticket)"
+								>[if(signup.space,'Sign Up','Event is Full')]</button>
+				<button mv-if="event.title"
+								mv-action="share(text: event.description, url: url(),title: event.title & ', ' & date(event.time))"
+								><img class="share" src="share.png"><span class="hide-compact"> Share Event</span></button>
 			</span>
 		</header>
 
@@ -255,7 +259,35 @@
 			</section>
 
 
-			<section mv-app="listEvents" 
+			<section mv-app="listEvents"
+							 class="debug-[url('debug')==''] hide show-if-[count(events)>0 || url('owner')]"
+							 mv-source="[util.storePrefix & '/events']"
+							 mv-source-options="auth"
+							 mv-source-key="AIzaSyC0PxY82lVLTLv80ZU1z5sz1azoYZits0I"
+							 mv-source-query="[query]"
+							 mv-bar="none"
+							 >
+				<h2>[if(ownerId==util.uid,'My',if(showAll,'All',first(data.organizerName)))] Events</h2>
+				<div class="debug">
+					<div property="showAll">[url('all')=='']</div>
+					<div property="ownerQuery">where('ownerId','==','[ownerId]')</div>
+					<div property="query">[if(url('all')=='','all',ownerQuery)]</div>
+					<div property="ownerId">[if(showAll,0,url('owner') || util.uid)]</div>
+				</div>
+				<ul mv-list="$items">
+					<li mv-list-item>
+						<span property="data">
+							<button mv-if="util.uid==ownerId" mv-action="fbDelete('mavo-apps/signup/events/' & eventId), fbDelete('mavo-apps/signup/signups/' & eventId), if(eventId == event.eventId,delete(event.title))">X</button>
+							<meta property="title"><meta property="ownerId"><meta property="eventId" mv-value="id"><meta property="organizerName">
+							<a href="?eventId=[eventId]">[title || "Untitled"]</a>, <time property="time"></time> <span mv-if="ownerId != listEvents.ownerId">([organizerName])</span>
+						</span>
+					</li>
+				</ul>
+			</section>
+		</main>
+
+		
+			<section mv-app="oldListEvents" 
  							 class="debug-[url('debug')==''] hide show-if-[count(events)>0 || url('owner')]"
 							 mv-storage="none" mv-bar="none"
 							 mv-plugins="share">
@@ -274,34 +306,12 @@
 						<a href="?eventId=[eventId]">[title || "Untitled"]</a>, <time property="time"></time> <span mv-if="ownerId != listEvents.ownerId">([organizerName])</span>
 					</li>
 				</ul>
-				[trackEvents("mavo-apps/signup/events",ownerId)]
 			</section>
-		</main>
 
 		<footer>
 			<div>Created by David Karger.  <a href="mailto:karger@mit.edu">Please send feedback.</a></div>
 		</footer>
 	</body>
-	<!--
-			broken radio button method
-								<label><input type="radio" name="payment[$index]"
-															property="payment"
-															value="cash"><img class="radio-icon" src="dollar.png"></label>
-								<!--<a href="https://www.flaticon.com/free-icons/dollar" title="dollar icons">Dollar icons created by Icongeek26 - Flaticon</a>-->
-								<!--
-								<label><input type="radio" name="payment[$index]"
-															value="check"><img class="radio-icon" src="bank-check.png"></label>
-								<!--<a href="https://www.flaticon.com/free-icons/bank-check" title="bank check icons">Bank check icons created by Iconjam - Flaticon</a>-->
-								<!--
-								<label><input type="radio" name="payment[$index]"
-															value="venmo"><img class="radio-icon" src="venmo.png"></label>
-								<label><input type="radio" name="payment[$index]"
-															value="none"><img class="radio-icon" src="circle.png"></label>
-								<span class="debug">[payment]</span>
-								<span class="debug" property="uid"></span>
-								<span class="debug" property="time"></span>
-								-->
-
 
 </html>
 

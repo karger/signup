@@ -26,38 +26,18 @@ setEdit = function(on) {
 
 absoluteURL = function(u) {
 	 return new URL(u.valueOf(),document.location).toString();
-}
+};
 
-trackEvents = function(eventStore,uid) {
-	 uid = uid.valueOf();
-	 eventStore = eventStore.valueOf();
-	 if (uid==="" || !eventStore) { //not fully initialized
-		  return;
-	 }
-	 firebaseReady.then((fb) => {
-		  let outputNode=Mavo.all.listEvents.root.children.events;
-		  let path = eventStore.split('/');
-		  let query = fb.firestore();
-		  while (path.length > 1) {
-				query=query.collection(path.shift()).doc(path.shift());
-		  }
-		  query = query.collection(path.shift());
-		  if (uid) {
-				query = query.where('ownerId','==',uid);
-		  }
-		  trackEvents.cancel?.(); //cancel old snapshot listener on change
-		  trackEvents.cancel = query.onSnapshot((results) => {
-				myEvents = [];
-				results.forEach((doc)=> {
-					 myEvents.push({eventId: doc.id, ...doc.data()});
-				});
-				myEvents.sort((a,b) => {
-					 return Date.parse(b.time) - Date.parse(a.time); 
-				});
-				outputNode.render(myEvents);
-		  });
-	 });
-}
+(async function () {
+    await Mavo.ready;
+    
+    Mavo.DOMExpression.special.event("$user", {
+				type: "mv-login mv-logout",
+				update: (evt) => {
+				    return (evt.type=="mv-login") ? evt.backend.user : null;
+				}
+    });
+})();
 
 fbDelete = function(path) {
 	 path = path.valueOf();
@@ -75,3 +55,4 @@ fbDelete = function(path) {
         fb.delete();
     });
 }
+
