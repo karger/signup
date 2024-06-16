@@ -31,7 +31,7 @@
 			}
 			.radio-icon {
 					width: 32px;
-					opacity: 30%;
+					opacity: 40%;
 			}
 			.radio-icon:hover.selected-false {
 					cursor: pointer;
@@ -39,7 +39,6 @@
 			}
 			input:hover ~ .radio-icon {
 					opacity: 100%;
-					width: 32px;
 			}
 			.radio-icon.selected-true {
 					opacity: 100%;
@@ -80,7 +79,8 @@
 			.debug [property]::before, .debug [property]::before {
 					content: attr(property) ": "
 			}
-			[mv-mode=edit] .show-edit [property], [mv-mode=edit].show-edit [property] {
+			[mv-mode=edit] .show-edit [property],
+			[mv-mode=edit].show-edit [property] {
 					border: 1px solid black;
 			}
 			.share {
@@ -147,12 +147,13 @@
 		<header id="controls" mv-app="controls" mv-storage="none" mv-plugins="share">
 			<form method="get" style="display:inline">
 				<input name="eventId" value="[''+$startup]" type="hidden">
-				<button id="create" type="submit">New  <span class="hide-compact">Event</span></button>
+				<button id="create"
+								type="submit">New <span class="hide-compact">Event</span></button>
 			</form>
 			<span mv-if="util.eventId">
  				<button mv-if="signup.signed"
 								mv-action="set(signup.change,first(signup.ticket where uid=util.uid)),delete (signup.ticket where uid=util.uid)">Cancel Signup</button>
-				<button mv-if="!signup.signed  && event.title" disabled="[!signup.space]"
+				<button mv-if="event.title && !signup.signed" disabled="[!signup.space]"
 								mv-action="set(signup.change,signup.mine),add(signup.mine,signup.ticket)">[if(signup.space,'Sign Up','Event is Full')]</button>
 				<button mv-if="event.title" mv-action="share(text: event.description, url: url(),title: event.title & ', ' & date(event.time))"><img class="share" src="share.png"><span class="hide-compact"> Share Event</span></button>
 			</span>
@@ -231,8 +232,8 @@
 				<div mv-if="space==1">1 spot remains</div>
 				<div mv-if="space<1">Event is full</div>
 				
-				<ul id="signups" mv-list="ticket">
-					<li class="me-[uid=util.uid]"  mv-multiple="ticket"  mv-initial-items="0">
+				<ul id="signups" mv-list="ticket" mv-initial-items="0">
+					<li class="me-[uid=util.uid]"  mv-list-item>
 						<span><button mv-if="event.isOwner" mv-action="delete(ticket)">X</button></span>
 						<span property="name"></span>
 						<span>
@@ -246,7 +247,11 @@
 						</span>
 					</li>
 				</ul>
-				<span mv-if="event.isOwner"><input property="newName" mv-storage="none"> <button mv-action="add(name: newName, ticket), delete(newName)">Add</button></span>
+				<span mv-if="event.isOwner"
+							><input property="newName" mv-storage="none">
+					<button mv-action="add(name: newName, ticket), delete(newName)"
+									>Add</button>
+				</span>
 			</section>
 
 
@@ -262,9 +267,8 @@
 						<img class="share" src="share.png"> Share My List
 					</button>
 				</div>
-				<ul>
-					<li property="events" mv-multiple
-							mv-initial-items="0">
+				<ul mv-list="events" 	mv-initial-items="0">
+					<li mv-list-item>
 						<button mv-if="util.uid==ownerId" mv-action="fbDelete('mavo-apps/signup/events/' & eventId), fbDelete('mavo-apps/signup/signups/' & eventId), if(eventId == event.eventId,delete(event.title))">X</button>
 						<meta property="title"><meta property="ownerId"><meta property="eventId"><meta property="organizerName">
 						<a href="?eventId=[eventId]">[title || "Untitled"]</a>, <time property="time"></time> <span mv-if="ownerId != listEvents.ownerId">([organizerName])</span>
